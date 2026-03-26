@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.relapps.localstreaming.presentation.login.LoginScreen
+import com.relapps.localstreaming.presentation.navigation.AppNavigation
 import com.relapps.localstreaming.ui.theme.LocalStreamingTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LocalStreamingTheme {
-                LoginScreen()
+                AppNavigation()
             }
         }
     }
