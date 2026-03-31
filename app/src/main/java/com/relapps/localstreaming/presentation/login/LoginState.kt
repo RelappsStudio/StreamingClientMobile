@@ -5,5 +5,6 @@ data class LoginState(
     val token: String? = null,
     val error: String? = null,
     val username: String = "",
-    val password: String = ""
+    val password: String = "",
+    val loginBypassTap: Int = 0
 )

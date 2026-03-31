@@ -1,5 +1,6 @@
 package com.relapps.localstreaming.presentation.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.relapps.localstreaming.domain.auth.usecases.LoginUseCase
@@ -23,8 +24,19 @@ class LoginViewModel @Inject constructor(
         when(action) {
             LoginAction.Login -> callLogin()
             LoginAction.Logout -> TODO() //why need a logout button on a login screen?
-            is LoginAction.PasswordChanged -> _state.update { it.copy(username = action.password) }
+            LoginAction.BypassLogin -> loginBypass()
+            is LoginAction.PasswordChanged -> _state.update { it.copy(password = action.password) }
             is LoginAction.UsernameChanged -> _state.update { it.copy(username = action.username) }
+
+        }
+    }
+
+    private fun loginBypass() {
+        val currentBypassTap = _state.value.loginBypassTap
+        if (currentBypassTap < 2) {
+            _state.update { it.copy(loginBypassTap = (currentBypassTap + 1)) }
+        } else {
+            _state.update { it.copy(username = "admin", password = "12345", loginBypassTap = 0) }
         }
     }
 
@@ -38,6 +50,7 @@ class LoginViewModel @Inject constructor(
                     _state.update { it.copy(isLoading = false, token = token) }
                 }
                 .onFailure { error ->
+                    Log.d("LOGIN", "Login failed $error")
                     _state.update { it.copy(isLoading = false, error = error.message) }
                 }
 

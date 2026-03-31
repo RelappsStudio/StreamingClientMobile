@@ -84,6 +84,9 @@ dependencies {
     ksp(libs.ksp.metadata.jvm)
     ksp(libs.hilt.compiler)
 
+    // More built-in material icons
+    implementation(libs.androidx.compose.material.icons.extended)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
