@@ -47,27 +47,29 @@ import com.relapps.localstreaming.ui.theme.PrimaryCoral
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    onBackNavigate: () -> Unit
+    onBackNavigate: () -> Unit,
+    onLoginSuccess: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    //TODO figure out if launched effect navigation is better than passing top argument from nav graph
     LaunchedEffect(state.token) {
         if (state.token != null) {
-            // Navigate to Home screen
+            onLoginSuccess()
         }
     }
 
     LoginContent(
         state = state,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onGuestLogin = onLoginSuccess
     )
 }
 
 @Composable
 fun LoginContent(
     state: LoginState,
-    onAction: (LoginAction) -> Unit
+    onAction: (LoginAction) -> Unit,
+    onGuestLogin: () -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val dim = ObsidianTheme.dimensions
@@ -172,7 +174,9 @@ fun LoginContent(
             ) {
                 ObsidianButton(
                     text = "Continue as Guest",
-                    onClick = {  } //TODO implement continue as guest to demo only suggestion engine
+                    onClick = {
+                        onGuestLogin()
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(dim.paddingMedium))

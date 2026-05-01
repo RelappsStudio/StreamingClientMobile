@@ -15,6 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LocalStreamingTheme {
+                //TODO: verification if user is already logged in based on existing token and call to validate
                 AppNavigation()
             }
         }

@@ -6,17 +6,17 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview(showBackground = true, name = "Initial state")
 @Composable
 fun PreviewLoginInitial() {
-    LoginContent(state = LoginState(), onAction = {})
+    LoginContent(state = LoginState(), onAction = {}, onGuestLogin = {})
 }
 
 @Preview(showBackground = true, name = "Loading state")
 @Composable
 fun PreviewLoginLoading() {
-    LoginContent(state = LoginState(isLoading = true), onAction = {})
+    LoginContent(state = LoginState(isLoading = true), onAction = {}, onGuestLogin = {})
 }
 
 @Preview(showBackground = true, name = "Error state")
 @Composable
 fun PreviewLoginError() {
-    LoginContent(state = LoginState(error = "Cannot log in at this time"), onAction = {})
+    LoginContent(state = LoginState(error = "Cannot log in at this time"), onAction = {}, onGuestLogin = {})
 }

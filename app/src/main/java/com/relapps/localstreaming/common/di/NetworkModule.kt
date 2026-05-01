@@ -5,6 +5,8 @@ import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import com.relapps.localstreaming.auth.data.AuthApi
 import com.relapps.localstreaming.auth.data.AuthInterceptor
+import com.relapps.localstreaming.home.data.MovieApi
+import com.relapps.localstreaming.home.domain.Movie
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,6 +37,12 @@ object NetworkModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi {
         return retrofit.create(AuthApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMovieApi(retrofit: Retrofit): MovieApi {
+        return retrofit.create(MovieApi::class.java)
     }
 
     @Provides
