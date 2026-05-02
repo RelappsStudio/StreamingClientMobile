@@ -4,14 +4,17 @@ import com.relapps.localstreaming.auth.domain.AuthStatus
 import com.relapps.localstreaming.common.data.TokenManager
 import com.relapps.localstreaming.auth.domain.models.LoginRequest
 import com.relapps.localstreaming.auth.domain.repository.AuthRepository
+import com.relapps.localstreaming.common.DispatcherProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
-    private val tokenManager: TokenManager
+    private val tokenManager: TokenManager,
+    private val dispatchers: DispatcherProvider
 ): AuthRepository {
 
     private val _authState = MutableStateFlow<AuthStatus>(AuthStatus.Loading)
@@ -34,8 +37,8 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun login(
         username: String,
         password: String
-    ): Result<String> {
-        return try {
+    ): Result<String> = withContext(dispatchers.io) {
+        return@withContext try {
             val response = api.login(LoginRequest(username, password))
             tokenManager.saveToken(response.token)
             _authState.value = AuthStatus.Authenticated(response.token, username)
@@ -52,6 +55,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun getToken(): String? {
-        TODO("Not yet implemented")
+        return tokenManager.getToken()
     }
 }

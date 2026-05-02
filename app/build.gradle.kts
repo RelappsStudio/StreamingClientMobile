@@ -87,6 +87,10 @@ dependencies {
     // More built-in material icons
     implementation(libs.androidx.compose.material.icons.extended)
 
+    // Coil -> chosen for smaller dep size and being kotlin oriented, not just android oriented
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

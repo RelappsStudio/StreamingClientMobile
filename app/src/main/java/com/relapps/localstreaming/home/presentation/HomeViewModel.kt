@@ -6,6 +6,7 @@ import com.relapps.localstreaming.auth.domain.AuthStatus
 import com.relapps.localstreaming.auth.domain.repository.AuthRepository
 import com.relapps.localstreaming.home.domain.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +24,7 @@ class HomeViewModel @Inject constructor(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val state: StateFlow<HomeState> = authRepository.authState.flatMapLatest {
         state ->
         flow {

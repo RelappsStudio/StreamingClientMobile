@@ -1,4 +1,4 @@
-package com.relapps.localstreaming.home.presentation
+package com.relapps.localstreaming.home.presentation.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.relapps.localstreaming.home.domain.Movie
 
 @Preview
@@ -32,10 +33,13 @@ fun MovieCard(
             .size(width = 240.dp, height = 100.dp)
     ) {
         Text(
-            text = "Elevated",
+            text = movie.title,
             modifier = Modifier
                 .padding(16.dp),
             textAlign = TextAlign.Center,
         )
+        AsyncImage(
+            model = movie.imageUrl,
+            contentDescription = movie.title        )
     }
 }
