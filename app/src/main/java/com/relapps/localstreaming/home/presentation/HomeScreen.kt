@@ -3,8 +3,10 @@ package com.relapps.localstreaming.home.presentation
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -18,10 +20,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-
+import com.relapps.localstreaming.home.data.PLACEHOLDER_IMAGE_URL
+import com.relapps.localstreaming.home.domain.Movie
+import com.relapps.localstreaming.home.presentation.components.MovieCard
+@Preview
+@Composable
+fun homeScreenPreview() {
+    HomeContent(
+        state = HomeState(
+            isLoading = false,
+            movies = listOf(
+                Movie("1", "Inception", PLACEHOLDER_IMAGE_URL),
+                Movie("2", "Interstellar", PLACEHOLDER_IMAGE_URL),
+                Movie("3", "The Dark Knight", PLACEHOLDER_IMAGE_URL)
+            )
+        )
+    )
+}
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -53,22 +72,44 @@ fun HomeContent(
         Column(
             modifier = Modifier.padding(paddingValues)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.Start,
             verticalArrangement = if (state.isLoading) Arrangement.Center else Arrangement.SpaceEvenly
         ) {
             if (state.isLoading) {
                 CircularProgressIndicator()
             } else {
-                Row(
-                    modifier = Modifier.horizontalScroll(scrollState)
-                        .size(width = 300.dp, height = 200.dp)
-                ) {
-                    LazyRow {
-                        items(state.movies.size) { movie ->
 
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        items(state.movies.size) { index ->
+                            MovieCard(
+                                modifier = Modifier.padding(16.dp),
+                                movie = state.movies[index])
                         }
                     }
+                    LazyRow {
+                        items(state.movies.size) { index ->
+                            MovieCard(
+                                modifier = Modifier.padding(16.dp),
+                                movie = state.movies[index])
+                        }
+                    }
+                    LazyRow {
+                        items(state.movies.size) { index ->
+                            MovieCard(
+                                modifier = Modifier.padding(16.dp),
+                                movie = state.movies[index])
+                        }
+                    }
+                LazyRow {
+                    items(state.movies.size) { index ->
+                        MovieCard(
+                            modifier = Modifier.padding(16.dp),
+                            movie = state.movies[index])
+                    }
                 }
+
             }
         }
     }
