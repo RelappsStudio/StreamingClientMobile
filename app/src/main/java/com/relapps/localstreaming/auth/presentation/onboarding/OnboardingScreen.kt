@@ -1,5 +1,6 @@
 package com.relapps.localstreaming.auth.presentation.onboarding
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,16 +26,19 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
+import io.flutter.embedding.android.FlutterActivity;
+
 import com.relapps.localstreaming.R
 import com.relapps.localstreaming.common.presentation.sharedComponents.ObsidianButton
 import com.relapps.localstreaming.ui.theme.ObsidianBase
 import com.relapps.localstreaming.ui.theme.ObsidianHighest
 import com.relapps.localstreaming.ui.theme.ObsidianTheme
 import com.relapps.localstreaming.ui.theme.PrimaryCoral
-
 @Preview(showBackground = true, )
 @Composable
 fun PreviewOnboardingScreen() {
@@ -46,6 +50,7 @@ fun PreviewOnboardingScreen() {
 fun OnboardingScreen(onNavigateToLogin: () -> Unit) {
     val dim = ObsidianTheme.dimensions
     val pagerState = rememberPagerState(pageCount = { 3 })
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize().background(ObsidianBase)) {
         // Background Gallery
@@ -109,6 +114,18 @@ fun OnboardingScreen(onNavigateToLogin: () -> Unit) {
             ObsidianButton(
                 text = "Get Started",
                 onClick = {onNavigateToLogin()}
+            )
+            Spacer(modifier = Modifier.height(dim.paddingMedium))
+            ObsidianButton(
+                text = "Open Flutter module",
+                onClick = {
+
+                    context.startActivity(
+                        FlutterActivity
+                            .withCachedEngine("warm_flutter_engine")
+                            .build(context)
+                    )
+                }
             )
             Spacer(modifier = Modifier.height(dim.paddingMedium))
         }
