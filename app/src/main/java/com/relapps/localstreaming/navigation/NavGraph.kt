@@ -7,13 +7,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.relapps.localstreaming.auth.presentation.login.LoginScreen
 import com.relapps.localstreaming.auth.presentation.onboarding.OnboardingScreen
+import com.relapps.localstreaming.common.presentation.sharedComponents.MainScreen
 import com.relapps.localstreaming.home.presentation.HomeScreen
 import kotlinx.serialization.Serializable
 
 sealed interface Screen {
 
+
+    @Serializable
+    object Search: Screen
+
+    @Serializable
+    object Profile: Screen
     @Serializable
     data object Home: Screen
+
+  @Serializable
+  object Main: Screen
     @Serializable
     data object Onboarding: Screen
     @Serializable
@@ -29,8 +39,8 @@ fun AppNavigation() {
         startDestination = Screen.Onboarding,
     ) {
 
-        composable<Screen.Home> {
-            HomeScreen()
+        composable<Screen.Main> {
+            MainScreen(navController)
         }
 
 
@@ -42,7 +52,7 @@ fun AppNavigation() {
             LoginScreen(
                 onBackNavigate = {navController.popBackStack()} ,
                 onLoginSuccess = {
-                    navController.navigate(Screen.Home) {
+                    navController.navigate(Screen.Main) {
                         popUpTo(Screen.Onboarding) {
                             inclusive = true
                         }

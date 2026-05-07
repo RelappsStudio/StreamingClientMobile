@@ -19,4 +19,16 @@ class FakeMovieRepositoryImpl @Inject constructor(): MovieRepository {
             Movie("6", "Star Wars: Revenge of the Sith", PLACEHOLDER_IMAGE_URL)
         )
     }
+
+    override suspend fun getPromos(): List<Movie> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getContinueWatching(): List<Movie> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCategoryHighlights(category: String): List<Movie> {
+        TODO("Not yet implemented")
+    }
 }

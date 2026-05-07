@@ -12,4 +12,16 @@ class ProdMovieRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getPromos(): List<Movie> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getContinueWatching(): List<Movie> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCategoryHighlights(category: String): List<Movie> {
+        TODO("Not yet implemented")
+    }
+
 }

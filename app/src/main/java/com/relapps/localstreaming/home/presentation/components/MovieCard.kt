@@ -1,6 +1,7 @@
 package com.relapps.localstreaming.home.presentation.components
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,20 +27,26 @@ import com.relapps.localstreaming.home.domain.Movie
 @Composable
 fun MovieCardPreview() {
     MovieCard(
-        movie = Movie("1", "Example", "https://placehold.co/600x400/orange/white")
+        movie = Movie("1", "Example", "https://placehold.co/600x400/orange/white",),
+        onMovieClicked = {}
     )
 }
 
 @Composable
 fun MovieCard(
     movie: Movie,
-    modifier: Modifier = Modifier) {
+    onMovieClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
         modifier = modifier
             .size(width = 150.dp, height = 240.dp)
+            .clickable(
+                onClick = onMovieClicked
+            )
 
     ) {
 
