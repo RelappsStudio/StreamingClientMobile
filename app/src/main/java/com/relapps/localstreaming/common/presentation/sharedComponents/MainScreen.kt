@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.relapps.localstreaming.home.presentation.HomeScreen
+import com.relapps.localstreaming.home.presentation.homeCore.HomeScreen
 import com.relapps.localstreaming.navigation.BottomNavItem
 import com.relapps.localstreaming.navigation.Screen
 import androidx.navigation.compose.composable

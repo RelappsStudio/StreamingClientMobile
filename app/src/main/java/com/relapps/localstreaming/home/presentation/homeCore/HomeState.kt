@@ -1,4 +1,4 @@
-package com.relapps.localstreaming.home.presentation
+package com.relapps.localstreaming.home.presentation.homeCore
 
 import com.relapps.localstreaming.home.domain.Movie
 

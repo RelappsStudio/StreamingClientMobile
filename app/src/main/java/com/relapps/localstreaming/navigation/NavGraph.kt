@@ -1,6 +1,7 @@
 package com.relapps.localstreaming.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
@@ -8,7 +9,6 @@ import androidx.navigation.compose.rememberNavController
 import com.relapps.localstreaming.auth.presentation.login.LoginScreen
 import com.relapps.localstreaming.auth.presentation.onboarding.OnboardingScreen
 import com.relapps.localstreaming.common.presentation.sharedComponents.MainScreen
-import com.relapps.localstreaming.home.presentation.HomeScreen
 import kotlinx.serialization.Serializable
 
 sealed interface Screen {
@@ -33,6 +33,11 @@ sealed interface Screen {
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+
+    DisposableEffect(navController) {
+        NavManager.setController(navController)
+        onDispose { NavManager.setController(null) }
+    }
 
     NavHost(
         navController = navController,
