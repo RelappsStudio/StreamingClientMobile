@@ -23,7 +23,7 @@ import com.relapps.localstreaming.home.presentation.components.MovieCategory
 
 @Preview
 @Composable
-fun homeScreenPreview() {
+fun HomeScreenPreview() {
     HomeContent(
         state = HomeState(
             isLoading = false,
@@ -32,18 +32,21 @@ fun homeScreenPreview() {
                 Movie("2", "Interstellar", PLACEHOLDER_IMAGE_URL),
                 Movie("3", "The Dark Knight", PLACEHOLDER_IMAGE_URL)
             )
-        )
+        ),
+        onMovieClicked = {}
     )
 }
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    onMovieClicked: (Movie) -> Unit,
     modifier: Modifier = Modifier
 ) {
         val state by viewModel.state.collectAsStateWithLifecycle()
 
     HomeContent(
-        state = state
+        state = state,
+        onMovieClicked = onMovieClicked
     )
 }
 
@@ -51,6 +54,7 @@ fun HomeScreen(
 @Composable
 fun HomeContent(
     state: HomeState,
+    onMovieClicked: (Movie) -> Unit,
     modifier: Modifier = Modifier) {
 
     val scrollState = rememberScrollState()
@@ -88,28 +92,28 @@ fun HomeContent(
                     MovieCategory(
                         title = "Dramas",
                         movies = state.movies,
-                        onMovieClicked = {}
+                        onMovieClicked = onMovieClicked
                     )
                 }
                 item {
                     MovieCategory(
                         title = "Comedy",
                         movies = state.movies,
-                        onMovieClicked = {}
+                        onMovieClicked = onMovieClicked
                     )
                 }
                 item {
                     MovieCategory(
                         title = "Action",
                         movies = state.movies,
-                        onMovieClicked = {}
+                        onMovieClicked = onMovieClicked
                     )
                 }
                 item {
                     MovieCategory(
                         title = "Horror",
                         movies = state.movies,
-                        onMovieClicked = {}
+                        onMovieClicked = onMovieClicked
                     )
                 }
 

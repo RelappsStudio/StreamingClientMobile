@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
+import com.relapps.localstreaming.home.presentation.movieDetails.MovieDetailsScreen
 
 @Composable
 fun MainScreen(
@@ -66,8 +67,14 @@ fun MainScreen(
             startDestination = Screen.Home,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable<Screen.MovieDetails> {
+                MovieDetailsScreen()
+            }
+
             composable<Screen.Home> {
-                HomeScreen()
+                HomeScreen(
+                    onMovieClicked = { movie -> localNavController.navigate(Screen.MovieDetails(movieId = movie.id))}
+                )
             }
             composable<Screen.Search> {
 //                TODO: make search feature
