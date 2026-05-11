@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-
-import 'ColorProvider.dart';
+import 'package:flutter_module/ColorProvider.dart';
 
 class ColorBox extends StatelessWidget {
   const ColorBox({super.key});
 
   @override
   Widget build(BuildContext context) {
-    print("colorbox build");
     final provider = ColorProvider.of(context);
-    final color = provider?.color ?? Colors.grey;
+    final color = provider?.color ?? Colors.amber;
 
-    return AnimatedContainer(
-        duration: Duration(milliseconds: 500),
-      width: 200,
+    return Container(
       height: 200,
+      width: 200,
       color: color,
-      child: Center(
-        child: Text("updating stateless widget by subscribing to inherited widget"),
-      ),
     );
   }
 }

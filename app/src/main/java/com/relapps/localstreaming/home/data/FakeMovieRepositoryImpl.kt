@@ -8,6 +8,7 @@ import javax.inject.Inject
 const val PLACEHOLDER_IMAGE_URL = "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
 
 class FakeMovieRepositoryImpl @Inject constructor(): MovieRepository {
+    private var _flutterMovies = listOf<Movie>()
     override suspend fun getMovies(): List<Movie> {
         delay(500)
         return listOf(
@@ -31,4 +32,10 @@ class FakeMovieRepositoryImpl @Inject constructor(): MovieRepository {
     override suspend fun getCategoryHighlights(category: String): List<Movie> {
         TODO("Not yet implemented")
     }
+
+    override fun setFlutterMovies(movies: List<Movie>) {
+       _flutterMovies = movies
+    }
+
+    override fun getFlutterMovies(): List<Movie> = _flutterMovies
 }

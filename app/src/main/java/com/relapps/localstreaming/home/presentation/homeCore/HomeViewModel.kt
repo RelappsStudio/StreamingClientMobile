@@ -1,9 +1,11 @@
 package com.relapps.localstreaming.home.presentation.homeCore
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.relapps.localstreaming.auth.domain.AuthStatus
 import com.relapps.localstreaming.auth.domain.repository.AuthRepository
+import com.relapps.localstreaming.home.domain.Movie
 import com.relapps.localstreaming.home.domain.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,8 +19,10 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val movieRepository: MovieRepository
+    private val movieRepository: MovieRepository,
 ) : ViewModel() {
+
+    private val flutterMovies: List<Movie> = movieRepository.getFlutterMovies()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val state: StateFlow<HomeState> = authRepository.authState.flatMapLatest {
@@ -33,12 +37,14 @@ class HomeViewModel @Inject constructor(
     }.stateIn(
         scope= viewModelScope,
         started= SharingStarted.WhileSubscribed(5000),
-        initialValue = HomeState()
+        initialValue = HomeState(
+            flutterMovies = flutterMovies
+        )
     )
 
     private suspend fun loadFakeMovies() : HomeState {
         val movies = movieRepository.getMovies()
-        return HomeState(movies = movies, isGuest = true, isLoading = false)
+        return HomeState(movies = movies, isGuest = true, isLoading = false, flutterMovies = flutterMovies)
     }
 
     private suspend fun loadProdMovies(): HomeState {

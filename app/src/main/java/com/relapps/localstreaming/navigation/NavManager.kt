@@ -13,10 +13,13 @@ object NavManager {
         navController?.navigate(screen)
     }
 
-    fun handleFlutterRequest(target: String){
+    fun handleFlutterRequest(target: String, arguments: Any? = null){
         when(target) {
-            "main" -> navigateTo(Screen.Main)
+            "main" -> {
+                navigateTo(Screen.Main)
+            }
             "login" -> navigateTo(Screen.Login)
+            else -> throw IllegalArgumentException("No screen exists: $target")
         }
     }
 }

@@ -88,6 +88,16 @@ fun HomeContent(
                 //TODO: implement category by state propagation
 //                items(state.categories) {category > MovieCategory()}
 
+                if (state.flutterMovies.isNotEmpty()) {
+                    item {
+                        MovieCategory(
+                            title = "Special flutter bonus",
+                            movies = state.flutterMovies,
+                            onMovieClicked = onMovieClicked
+                        )
+                    }
+                }
+
                 item {
                     MovieCategory(
                         title = "Dramas",

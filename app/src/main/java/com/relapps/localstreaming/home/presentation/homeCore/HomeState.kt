@@ -7,6 +7,7 @@ data class HomeState (
     val isLoading: Boolean = true,
     val isGuest : Boolean = true,
     val movies : List<Movie> = listOf(),
+    val flutterMovies: List<Movie> = listOf(),
 )
 
 

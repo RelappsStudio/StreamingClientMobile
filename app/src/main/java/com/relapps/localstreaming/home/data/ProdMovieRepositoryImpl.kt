@@ -24,4 +24,12 @@ class ProdMovieRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override fun setFlutterMovies(movies: List<Movie>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFlutterMovies(): List<Movie> {
+        TODO("Not yet implemented")
+    }
+
 }

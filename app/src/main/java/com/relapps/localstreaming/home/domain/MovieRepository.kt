@@ -6,4 +6,7 @@ interface MovieRepository {
     suspend fun getContinueWatching(): List<Movie>
     suspend fun getCategoryHighlights(category: String): List<Movie>
 //    suspend fun getMovieDetails(): TODO make movie details screen, model and fetching
+
+    fun setFlutterMovies(movies: List<Movie>)
+    fun getFlutterMovies() : List<Movie>
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_module/AnimatedColorBox.dart';
 import 'package:flutter_module/ColorBox.dart';
 import 'package:flutter_module/ColorManager.dart';
 import 'package:flutter_module/nativeNavigator.dart';
+import 'package:flutter_module/src/generated/navigation_api_g.dart';
 
 void main() => runApp(const MyApp());
 
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ColorManager(child: const MyHomePage(title: 'Flutter Demo Home Page')),
+      home: ColorManager(child: MyHomePage(title: 'Flutter Demo Home Page')),
     );
   }
 }
@@ -34,6 +36,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  List<FlutterMovie> movies = [
+    FlutterMovie(id: "20", title:  "Flutter bonus",imageUrl:  "https://flutter.dev/assets/shadow-dash.d59d0e8266b087a7a7f8a61c50ad4f6e.png"),
+    FlutterMovie(id: "20", title:  "Flutter is cool",imageUrl:  "https://flutter.dev/assets/shadow-dash.d59d0e8266b087a7a7f8a61c50ad4f6e.png"),
+    FlutterMovie(id: "20", title:  "Flutter sends data to native",imageUrl:  "https://flutter.dev/assets/shadow-dash.d59d0e8266b087a7a7f8a61c50ad4f6e.png"),
+    FlutterMovie(id: "20", title:  "Pigeon is kinda nice",imageUrl:  "https://flutter.dev/assets/shadow-dash.d59d0e8266b087a7a7f8a61c50ad4f6e.png"),
+    FlutterMovie(id: "20", title:  "Complex objects over method channel?",imageUrl:  "https://flutter.dev/assets/shadow-dash.d59d0e8266b087a7a7f8a61c50ad4f6e.png"),
+    FlutterMovie(id: "20", title:  "More flutter please",imageUrl:  "https://flutter.dev/assets/shadow-dash.d59d0e8266b087a7a7f8a61c50ad4f6e.png"),
+  ];
 
   void _incrementCounter() {
     setState(() {
@@ -73,7 +83,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(onPressed: () {
                 NativeNavigator.navigateTo('main');
                 NativeNavigator.closeModule();
-              }, child: const Text("Navigate to main screen")),
+              }, child: const Text("To native home")),ElevatedButton(onPressed: () {
+                PidgeonNavigator.navigateWithMovies('main', movies);
+                PidgeonNavigator.closeModule();
+              }, child: const Text("To native home with bonus")),
+              RepaintBoundary(child: AnimatedColorBox()),
+              SizedBox(height: 20,),
               RepaintBoundary(child: ColorBox()),
             ],
           ),
