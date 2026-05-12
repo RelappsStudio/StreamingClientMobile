@@ -4,8 +4,14 @@ import 'package:flutter_module/ColorBox.dart';
 import 'package:flutter_module/ColorManager.dart';
 import 'package:flutter_module/nativeNavigator.dart';
 import 'package:flutter_module/src/generated/navigation_api_g.dart';
+import 'package:flutter_module/typicode_feature/di/deps.dart';
+import 'package:flutter_module/typicode_feature/presentation/typicode_screen.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+  registerDependencies();
+}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -70,27 +76,31 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
 
-          child: Column(
-
-            mainAxisAlignment: .center,
-            children: [
-              const Text('You have pushed the button this many times:'),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-
-              ElevatedButton(onPressed: () {
-                NativeNavigator.navigateTo('main');
-                NativeNavigator.closeModule();
-              }, child: const Text("To native home")),ElevatedButton(onPressed: () {
-                PidgeonNavigator.navigateWithMovies('main', movies);
-                PidgeonNavigator.closeModule();
-              }, child: const Text("To native home with bonus")),
-              RepaintBoundary(child: AnimatedColorBox()),
-              SizedBox(height: 20,),
-              RepaintBoundary(child: ColorBox()),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: .center,
+              spacing: 20,
+              children: [
+                const Text('You have pushed the button this many times:'),
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+            
+                ElevatedButton(onPressed: () {
+                  NativeNavigator.navigateTo('main');
+                  NativeNavigator.closeModule();
+                }, child: const Text("To native home")),ElevatedButton(onPressed: () {
+                  PidgeonNavigator.navigateWithMovies('main', movies);
+                  PidgeonNavigator.closeModule();
+                }, child: const Text("To native home with bonus")),
+                RepaintBoundary(child: AnimatedColorBox()),
+                RepaintBoundary(child: ColorBox()),
+                ElevatedButton(onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => TypicodeScreen()));
+                }, child: Text("Go to DI demo"))
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
