@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.relapps.localstreaming.auth.presentation.login.LoginScreen
 import com.relapps.localstreaming.auth.presentation.onboarding.OnboardingScreen
+import com.relapps.localstreaming.checkers.presentation.CheckersScreen
 import com.relapps.localstreaming.common.presentation.sharedComponents.MainScreen
 import com.relapps.localstreaming.home.domain.Movie
 import com.relapps.localstreaming.home.presentation.homeCore.HomeScreen
@@ -32,6 +33,9 @@ sealed interface Screen {
     data object Onboarding: Screen
     @Serializable
     data object Login: Screen
+    @Serializable
+    data object Checkers: Screen
+
 }
 
 @Composable
@@ -47,6 +51,10 @@ fun AppNavigation() {
         navController = navController,
         startDestination = Screen.Onboarding,
     ) {
+
+        composable<Screen.Checkers> {
+            CheckersScreen()
+        }
 
         composable<Screen.MovieDetails> {
             MovieDetailsScreen()
@@ -64,12 +72,14 @@ fun AppNavigation() {
 
 
         composable<Screen.Onboarding> {
-            OnboardingScreen(onNavigateToLogin = { navController.navigate(Screen.Login) })
+            OnboardingScreen(
+                onNavigateToCheckers = {navController.navigate(Screen.Checkers)},
+                onNavigateToLogin = { navController.navigate(Screen.Login) })
         }
 
         composable<Screen.Login> {
             LoginScreen(
-                onBackNavigate = {navController.popBackStack()} ,
+                onBackNavigate = {},
                 onLoginSuccess = {
                     navController.navigate(Screen.Main) {
                         popUpTo(Screen.Onboarding) {

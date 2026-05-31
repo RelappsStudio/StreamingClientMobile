@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocal
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +36,7 @@ import io.flutter.embedding.android.FlutterActivity;
 
 import com.relapps.localstreaming.R
 import com.relapps.localstreaming.common.presentation.sharedComponents.ObsidianButton
+import com.relapps.localstreaming.ui.theme.LocalAppDimensions
 import com.relapps.localstreaming.ui.theme.ObsidianBase
 import com.relapps.localstreaming.ui.theme.ObsidianHighest
 import com.relapps.localstreaming.ui.theme.ObsidianTheme
@@ -42,12 +44,16 @@ import com.relapps.localstreaming.ui.theme.PrimaryCoral
 @Preview(showBackground = true, )
 @Composable
 fun PreviewOnboardingScreen() {
-    OnboardingScreen(onNavigateToLogin = {})
+    OnboardingScreen(
+        onNavigateToCheckers = {},
+        onNavigateToLogin = {})
 }
 
 
 @Composable
-fun OnboardingScreen(onNavigateToLogin: () -> Unit) {
+fun OnboardingScreen(
+    onNavigateToCheckers: () -> Unit,
+    onNavigateToLogin: () -> Unit) {
     val dim = ObsidianTheme.dimensions
     val pagerState = rememberPagerState(pageCount = { 3 })
     val context = LocalContext.current
@@ -114,6 +120,11 @@ fun OnboardingScreen(onNavigateToLogin: () -> Unit) {
             ObsidianButton(
                 text = "Get Started",
                 onClick = {onNavigateToLogin()}
+            )
+            Spacer(modifier = Modifier.height(dim.paddingMedium))
+            ObsidianButton(
+                text = "Play checkers",
+                onClick = {onNavigateToCheckers()}
             )
             Spacer(modifier = Modifier.height(dim.paddingMedium))
             ObsidianButton(
