@@ -7,13 +7,16 @@ typealias BoardGrid = List<List<CheckersPiece?>>
 
 data class Coordinate(val row: Int, val column: Int)
 
+enum class GameMode {PVP, VS_AI}
+
 data class CheckersState (
-    val versusAI: Boolean = false,
+    val gameMode: GameMode? = null,
     val board: BoardGrid = createInitialBoard(),
     val currentTurn: PieceColor = PieceColor.WHITE,
     val selectedSquare: Coordinate? = null,
     val validMoves: List<Coordinate> = emptyList(),
-
+    val aiColor: PieceColor = PieceColor.RED,
+    val winner: PieceColor? = null
     )
 
 fun createInitialBoard(): BoardGrid {

@@ -1,12 +1,18 @@
 package com.relapps.localstreaming.checkers.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.relapps.localstreaming.checkers.domain.PieceColor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
+
+data class PotentialMove(val start: Coordinate, val end: Coordinate, val isJump: Boolean)
 @HiltViewModel
 class CheckersViewModel @Inject constructor() : ViewModel() {
 
@@ -15,7 +21,89 @@ class CheckersViewModel @Inject constructor() : ViewModel() {
 
     fun onAction(action: CheckersAction) {
         when(action) {
-            is CheckersAction.SquareSelect -> handleSquareSelect(action.row, action.column)
+            is CheckersAction.SquareSelect -> {
+                val currentState = _state.value
+
+                //if game has a winner do not process next clicks
+                if (currentState.winner != null) {
+                    return
+                }
+                //if it's AI turn ignore user clicks
+                if (currentState.gameMode == GameMode.VS_AI && currentState.currentTurn == currentState.aiColor) {
+                    return
+                }
+                handleSquareSelect(action.row, action.column)
+            }
+            is CheckersAction.SelectGameMode -> {
+                _state.value = _state.value.copy(gameMode = action.mode)
+                val currentState = _state.value
+                if (currentState.gameMode == GameMode.VS_AI && currentState.currentTurn == currentState.aiColor) {
+                    aiMove()
+                }
+            }
+
+            CheckersAction.ResetGame -> _state.value = CheckersState() //reset game to base state
+        }
+    }
+
+    private fun hasAnyValidMoves(color: PieceColor, board: BoardGrid) : Boolean {
+        for (y in 0 until 8) {
+            for (x in 0 until 8) {
+                if (board[y][x]?.color == color) {
+                    val moves = calculateValidMoves(Coordinate(y, x), board)
+                    if (moves.isNotEmpty()) {
+                        return true
+                    }
+                }
+            }
+        }
+
+        return false
+    }
+
+
+    //AI move scans the whole board for pieces
+    //prepares all possible moves for pieces found
+    //if any piece can be taken from opponent take it
+    //else make a random move from possible ones
+    private fun aiMove() {
+        viewModelScope.launch {
+            delay(600)
+
+            val currentState = _state.value
+            val aiPieces = mutableListOf<Coordinate>()
+
+            for (y in 0 until 8) {
+                for (x in 0 until 8) {
+                    if (currentState.board[y][x]?.color == currentState.aiColor) {
+                        aiPieces.add(Coordinate(y, x))
+                    }
+                }
+            }
+
+            val allPotentialMoves = mutableListOf<PotentialMove>()
+
+            for (start in aiPieces) {
+                val validTargets = calculateValidMoves(start, currentState.board)
+                for (end in validTargets) {
+                    val isJump = Math.abs(end.row - start.row) == 2
+                    allPotentialMoves.add(PotentialMove(start, end, isJump))
+                }
+            }
+
+            if (allPotentialMoves.isEmpty()) {
+                //TODO game over state
+                return@launch
+            }
+
+            val jumpMoves = allPotentialMoves.filter { move -> move.isJump }
+            val chosenMove = if (!jumpMoves.isEmpty()) {
+                jumpMoves[Random.nextInt(jumpMoves.size)]
+            } else {
+                allPotentialMoves[Random.nextInt(allPotentialMoves.size)]
+            }
+
+            movePiece(chosenMove.start, chosenMove.end)
         }
     }
 
@@ -88,6 +176,10 @@ class CheckersViewModel @Inject constructor() : ViewModel() {
                     selectedSquare = end,
                     validMoves = additionalMoves.filter {currentCoordinate -> Math.abs(currentCoordinate.row - end.row) == 2}
                 )
+
+                if (currentState.gameMode == GameMode.VS_AI && currentState.currentTurn == currentState.aiColor) {
+                    aiMove()
+                }
                 return
             }
         }
@@ -95,13 +187,21 @@ class CheckersViewModel @Inject constructor() : ViewModel() {
         //switch turns after performing a valid move
         val nextTurn = if (currentState.currentTurn == PieceColor.WHITE) PieceColor.RED else PieceColor.WHITE
 
+        val isGameOver = !hasAnyValidMoves(nextTurn, newBoard)
+        val winner = if (isGameOver) currentState.currentTurn else null
+
         //update state and clear selection
         _state.value = currentState.copy(
             board = newBoard,
             currentTurn = nextTurn,
             selectedSquare = null,
-            validMoves = emptyList()
+            validMoves = emptyList(),
+            winner = winner
         )
+        //after changing turns see if it's ai turn and make ai move
+        if (winner == null && _state.value.gameMode == GameMode.VS_AI && _state.value.currentTurn == currentState.aiColor) {
+            aiMove()
+        }
     }
 
     private fun calculateValidMoves(start: Coordinate, board: BoardGrid): List<Coordinate> {

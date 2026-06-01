@@ -8,17 +8,14 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.relapps.localstreaming.checkers.domain.CheckersPiece
 import com.relapps.localstreaming.checkers.domain.PieceColor
+import com.relapps.localstreaming.common.presentation.sharedComponents.ObsidianButton
 import com.relapps.localstreaming.ui.theme.ObsidianBase
 
 @Preview
@@ -69,6 +67,11 @@ fun CheckersContent(
     state: CheckersState,
     onAction: (CheckersAction)-> Unit,
     modifier: Modifier = Modifier) {
+
+    if (state.gameMode == null) {
+        GameModeDialog(onAction = onAction)
+    }
+
     Scaffold(
         topBar = { TopAppBar(title = { Text("Checkers") }) },
         containerColor = ObsidianBase
@@ -107,7 +110,14 @@ fun CheckersContent(
                                     modifier = Modifier
                                         .clickable(
                                             enabled = true,
-                                            onClick = { onAction(CheckersAction.SquareSelect(row = row, column = column)) }
+                                            onClick = {
+                                                onAction(
+                                                    CheckersAction.SquareSelect(
+                                                        row = row,
+                                                        column = column
+                                                    )
+                                                )
+                                            }
                                         )
                                         .size(squareSize)
                                         .border(
@@ -135,6 +145,14 @@ fun CheckersContent(
                 }
             }
 
+        state.winner?.let { winner->
+            GameOverDialog(
+                winner = winner,
+                gameMode = state.gameMode,
+                onAction = onAction
+            )
+        }
+
 
     }
 }
@@ -158,10 +176,63 @@ fun CheckersPiece(
         if (piece.isKing) {
             Icon(imageVector = Icons.Default.Star,
                 contentDescription = "King",
-                tint = Color.White,
+                tint = Color.Yellow,
                 modifier = Modifier.fillMaxSize(0.5f)
                 )
         }
     }
 
+}
+
+@Composable
+fun GameModeDialog(
+    onAction: (CheckersAction)-> Unit,
+    modifier: Modifier = Modifier) {
+
+    AlertDialog(
+        onDismissRequest = {},
+        title = { Text(text="Choose game mode")},
+        text = {Text("Play locally vs human or AI")},
+        confirmButton = {
+            ObsidianButton(
+                onClick = {onAction(CheckersAction.SelectGameMode(GameMode.PVP))},
+                text = "Play vs human"
+            )
+        },
+        dismissButton = {
+            ObsidianButton(
+                onClick = {onAction(CheckersAction.SelectGameMode(GameMode.VS_AI))},
+                text = "Play vs AI"
+            )
+        }
+
+    )
+    
+}
+
+@Composable
+fun GameOverDialog(
+    winner: PieceColor,
+    gameMode: GameMode?,
+    onAction: (CheckersAction) -> Unit,
+    modifier: Modifier = Modifier) {
+
+    val winMessage = when {
+        gameMode == GameMode.VS_AI && winner == PieceColor.WHITE -> "You win!"
+        gameMode == GameMode.VS_AI && winner == PieceColor.RED -> "AI wins!"
+        else -> "${winner.name} wins!"
+    }
+
+    AlertDialog(
+        onDismissRequest = {},
+        title = {Text("Game Over")},
+        text = {Text(winMessage)},
+        confirmButton = {
+            ObsidianButton(
+                text = "Play again",
+                onClick = {onAction(CheckersAction.ResetGame)}
+            )
+        }
+    )
+    
 }
