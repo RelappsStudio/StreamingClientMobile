@@ -73,7 +73,8 @@ fun MainScreen(
 
             composable<Screen.Home> {
                 HomeScreen(
-                    onMovieClicked = { movie -> localNavController.navigate(Screen.MovieDetails(movieId = movie.id))}
+                    onMovieClicked = { movie -> localNavController.navigate(Screen.MovieDetails(movieId = movie.id))},
+                            onStoryClicked = {clickedIndex -> navController.navigate(Screen.Stories(initialGroupIndex = clickedIndex))}
                 )
             }
             composable<Screen.Search> {

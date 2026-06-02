@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -47,6 +47,8 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+
     }
 }
 
@@ -104,3 +106,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
 
+
+secrets {
+    propertiesFileName = "secrets.properties"
+}

@@ -3,6 +3,7 @@ package com.relapps.localstreaming.common.di
 import android.content.Context
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
+import com.relapps.localstreaming.BuildConfig
 import com.relapps.localstreaming.auth.data.AuthApi
 import com.relapps.localstreaming.auth.data.AuthInterceptor
 import com.relapps.localstreaming.home.data.MovieApi
@@ -15,6 +16,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -29,6 +31,26 @@ object NetworkModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    @StoriesRetrofit
+    fun provideStoriesRetrofit(baseClient: OkHttpClient): Retrofit {
+        val storiesClient = baseClient.newBuilder()
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .addHeader("Authorization", BuildConfig.PEXELS_KEY)
+                    .build()
+                chain.proceed(request)
+            }
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl("https://api.pexels.com/v1/")
+            .client(storiesClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -63,3 +85,7 @@ object NetworkModule {
 
     }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class StoriesRetrofit

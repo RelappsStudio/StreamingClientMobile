@@ -1,7 +1,9 @@
 package com.relapps.localstreaming.home.presentation.homeCore
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,6 +22,10 @@ import com.relapps.localstreaming.common.presentation.sharedComponents.ElevatedT
 import com.relapps.localstreaming.home.data.PLACEHOLDER_IMAGE_URL
 import com.relapps.localstreaming.home.domain.Movie
 import com.relapps.localstreaming.home.presentation.components.MovieCategory
+import com.relapps.localstreaming.stories.domain.StoryPage
+import com.relapps.localstreaming.stories.domain.UserStoryGroup
+import com.relapps.localstreaming.stories.presentation.composables.StoriesRibbon
+import com.relapps.localstreaming.stories.presentation.composables.StoriesRibbonWrapper
 
 @Preview
 @Composable
@@ -33,20 +39,23 @@ fun HomeScreenPreview() {
                 Movie("3", "The Dark Knight", PLACEHOLDER_IMAGE_URL)
             )
         ),
-        onMovieClicked = {}
+        onMovieClicked = {},
+        onStoryClicked = {}
     )
 }
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onMovieClicked: (Movie) -> Unit,
+    onStoryClicked: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
         val state by viewModel.state.collectAsStateWithLifecycle()
 
     HomeContent(
         state = state,
-        onMovieClicked = onMovieClicked
+        onMovieClicked = onMovieClicked,
+        onStoryClicked = onStoryClicked
     )
 }
 
@@ -55,6 +64,7 @@ fun HomeScreen(
 fun HomeContent(
     state: HomeState,
     onMovieClicked: (Movie) -> Unit,
+    onStoryClicked: (Int) -> Unit,
     modifier: Modifier = Modifier) {
 
     val scrollState = rememberScrollState()
@@ -70,71 +80,79 @@ fun HomeContent(
         }
     ) {
         paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-//                .padding(paddingValues)
-//                .verticalScroll(scrollState)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = if (state.isLoading) Arrangement.Center else Arrangement.SpaceEvenly,
-            contentPadding = paddingValues
+        Column(
+            modifier = Modifier.padding(paddingValues),
         ) {
-            if (state.isLoading) {
-                item {
-                    CircularProgressIndicator()
-                }
+            StoriesRibbonWrapper(
+                onStoryClicked = onStoryClicked
+            )
 
-            } else {
-                //TODO: implement category by state propagation
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = if (state.isLoading) Arrangement.Center else Arrangement.SpaceEvenly,
+
+            ) {
+                if (state.isLoading) {
+                    item {
+                        CircularProgressIndicator()
+                    }
+
+                } else {
+
+                    //TODO: implement category by state propagation
 //                items(state.categories) {category > MovieCategory()}
 
-                if (state.flutterMovies.isNotEmpty()) {
+                    if (state.flutterMovies.isNotEmpty()) {
+                        item {
+                            MovieCategory(
+                                title = "Special flutter bonus",
+                                movies = state.flutterMovies,
+                                onMovieClicked = onMovieClicked
+                            )
+                        }
+                    }
+
                     item {
                         MovieCategory(
-                            title = "Special flutter bonus",
-                            movies = state.flutterMovies,
+                            title = "Dramas",
+                            movies = state.movies,
                             onMovieClicked = onMovieClicked
                         )
                     }
+                    item {
+                        MovieCategory(
+                            title = "Comedy",
+                            movies = state.movies,
+                            onMovieClicked = onMovieClicked
+                        )
+                    }
+                    item {
+                        MovieCategory(
+                            title = "Action",
+                            movies = state.movies,
+                            onMovieClicked = onMovieClicked
+                        )
+                    }
+                    item {
+                        MovieCategory(
+                            title = "Horror",
+                            movies = state.movies,
+                            onMovieClicked = onMovieClicked
+                        )
+                    }
+
+
+
+
+
+
+
+
                 }
-
-                item {
-                    MovieCategory(
-                        title = "Dramas",
-                        movies = state.movies,
-                        onMovieClicked = onMovieClicked
-                    )
-                }
-                item {
-                    MovieCategory(
-                        title = "Comedy",
-                        movies = state.movies,
-                        onMovieClicked = onMovieClicked
-                    )
-                }
-                item {
-                    MovieCategory(
-                        title = "Action",
-                        movies = state.movies,
-                        onMovieClicked = onMovieClicked
-                    )
-                }
-                item {
-                    MovieCategory(
-                        title = "Horror",
-                        movies = state.movies,
-                        onMovieClicked = onMovieClicked
-                    )
-                }
-
-
-
-
-
-
-
-
             }
         }
+
     }
 }
