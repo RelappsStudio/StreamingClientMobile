@@ -7,11 +7,17 @@ import androidx.navigation.toRoute
 import com.relapps.localstreaming.navigation.Screen
 import com.relapps.localstreaming.stories.domain.StoriesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+sealed interface StoriesEffect {
+    object ExitStories: StoriesEffect
+}
 
 @HiltViewModel
 class StoriesViewModel @Inject constructor(
@@ -21,6 +27,9 @@ class StoriesViewModel @Inject constructor(
 
     private val _state= MutableStateFlow(StoriesState())
     val state = _state.asStateFlow()
+
+    private val _effect = Channel<StoriesEffect>()
+    val effect = _effect.receiveAsFlow()
 
     init {
         val route = savedStateHandle.toRoute<Screen.Stories>()
@@ -34,7 +43,6 @@ class StoriesViewModel @Inject constructor(
             StoriesAction.LoadStories -> fetchStories()
             StoriesAction.NextPage -> handleNextPage()
             StoriesAction.PreviousPage -> handlePreviousPage()
-            is StoriesAction.SetInitialGroup -> TODO()
         }
     }
 
@@ -63,7 +71,9 @@ class StoriesViewModel @Inject constructor(
                 it.copy(currentGroupIndex = currentState.currentGroupIndex + 1, currentPageIndex = 0)
             }
         } else {
-            //TODO exit viewing stories
+            viewModelScope.launch {
+                _effect.send(StoriesEffect.ExitStories)
+            }
         }
     }
 

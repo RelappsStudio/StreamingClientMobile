@@ -39,6 +39,8 @@ object NetworkModule {
     @Singleton
     @StoriesRetrofit
     fun provideStoriesRetrofit(baseClient: OkHttpClient): Retrofit {
+
+        //TODO add pre-caching
         val storiesClient = baseClient.newBuilder()
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()

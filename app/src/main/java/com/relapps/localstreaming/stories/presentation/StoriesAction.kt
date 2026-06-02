@@ -5,5 +5,4 @@ sealed interface StoriesAction {
     object NextPage: StoriesAction
     object PreviousPage: StoriesAction
     data class GroupSwiped(val newGroupIndex: Int) : StoriesAction
-    data class SetInitialGroup(val groupIndex: Int): StoriesAction
 }

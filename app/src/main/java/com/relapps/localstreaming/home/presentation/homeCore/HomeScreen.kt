@@ -67,7 +67,6 @@ fun HomeContent(
     onStoryClicked: (Int) -> Unit,
     modifier: Modifier = Modifier) {
 
-    val scrollState = rememberScrollState()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

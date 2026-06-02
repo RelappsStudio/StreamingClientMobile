@@ -99,8 +99,10 @@ fun AppNavigation() {
             )
         }
 
-        composable<Screen.Stories> { backStackEntry ->
-            StoriesScreen()
+        composable<Screen.Stories> {
+            StoriesScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 }
